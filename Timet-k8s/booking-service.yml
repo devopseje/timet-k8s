@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: booking-service-tmt
+  labels:
+    app:  booking-service-tmt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app:  booking-service-tmt
+  template:
+    metadata:
+      labels:
+        app:  booking-service-tmt
+    spec:
+      containers:
+        - name:  booking-service-tmt
+          image: aftechsolution/booking-service:22
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5002
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name:  booking-service-svc
+spec:
+  ports:
+    - targetPort: 5002
+      protocol: TCP
+      port: 80
+  selector:
+    app: booking-service-tmt

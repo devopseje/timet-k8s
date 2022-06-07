@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service-tmt
+  labels:
+    app:  notification-service-tmt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app:  notification-service-tmt
+  template:
+    metadata:
+      labels:
+        app:  notification-service-tmt
+    spec:
+      containers:
+        - name:  notification-service-tmt
+          image: aftechsolution/notification-service:64
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5001
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name:  notification-service-svc
+spec:
+  ports:
+    - targetPort: 5001
+      protocol: TCP
+      port: 80
+  selector:
+    app: notification-service-tmt

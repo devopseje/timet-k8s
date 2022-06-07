@@ -1,0 +1,36 @@
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: service-registry
+spec:
+  serviceName: "service-registry"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-registry
+  template:
+    metadata:
+      labels:
+        app: service-registry
+    spec:
+      containers:
+        - name: service-registry
+          image: aftechsolution/service-registry:12
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8761
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: eureka-lb
+  labels:
+    app: service-registry
+spec:
+  selector:
+    app: service-registry
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8761
